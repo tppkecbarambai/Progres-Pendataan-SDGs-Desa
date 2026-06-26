@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard SDGs Desa - Kecamatan Barambai 2026</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 400: '#38bdf8',
+          500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 800: '#075985', 900: '#0c4a6e'
+        }
+      },
+      boxShadow: {
+        'soft': '0 4px 20px 0 rgba(0,0,0,0.05)',
+        'soft-lg': '0 10px 30px 0 rgba(0,0,0,0.08)'
+      }
+    }
+  }
+}
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+body { font-family: 'Inter', sans-serif; }
+.gradient-text {
+  background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+}
+.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+.dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+.animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.slide-in { animation: slideIn 0.4s ease-out forwards; }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.tooltip {
+  position: relative;
+}
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+.tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.sort-arrow {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+</style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-300">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center shadow-soft">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-lg sm:text-xl font-bold gradient-text">SDGs Barambai 2026</h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block" data-lang="dashboard_subtitle">Dashboard Progress Pendataan</p>
+          </div>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <select id="langToggle" class="px-2 py-2 text-sm font-medium rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700">
+            <option value="id">🇮🇩 ID</option>
+            <option value="bjn">🫰 BJN</option>
+          </select>
+          <a href="https://tppkecamatanbarambai.blogspot.com/" target="_blank" class="hidden sm:block px-3 py-2 text-sm font-medium rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-soft">
+            Breanch
+          </a>
+          <button id="exportExcel" class="hidden sm:flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-soft">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+            <span data-lang="excel">Excel</span>
+          </button>
+          <button id="exportPDF" class="hidden sm:flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg bg-red-600 hover:bg-red-700 text-white transition-all shadow-soft">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+            <span data-lang="pdf">PDF</span>
+          </button>
+          <button id="darkToggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all" title="Mode Gelap" data-lang-title="dark_mode">
+            <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+            <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 0 0012 21a9.003 0 008.354-5.646z" /></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <!-- Loading State -->
+    <div id="loadingState" class="flex flex-col items-center justify-center py-20">
+      <div class="animate-pulse-slow w-16 h-16 rounded-full bg-gradient-to-br from-primary-500 to-indigo-600 mb-4"></div>
+      <p class="text-sm text-slate-500 dark:text-slate-400" id="loadingText" data-lang="loading">Memuat data dari Google Sheet...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="hidden bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-red-500 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <h3 class="text-lg font-semibold text-red-800 dark:text-red-300 mb-2" data-lang="error_title">Gagal Memuat Data</h3>
+      <p class="text-sm text-red-600 dark:text-red-400 mb-4" id="errorMessage" data-lang="error_msg">Tidak dapat mengambil data dari Google Sheet. Periksa koneksi atau coba lagi nanti.</p>
+      <div class="flex flex-col sm:flex-row gap-2 justify-center">
+        <button id="retryBtn" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-all" data-lang="retry">Coba Lagi</button>
+        <button id="debugBtn" class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg text-sm font-medium transition-all" data-lang="debug">Lihat Debug Info</button>
+      </div>
+      <div id="debugInfo" class="hidden mt-4 p-4 bg-slate-100 dark:bg-slate-800 rounded-lg text-left text-xs font-mono overflow-x-auto"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="hidden space-y-6">
+      <!-- Summary Stats -->
+      <div class="bg-gradient-to-br from-primary-600 via-primary-700 to-indigo-700 rounded-2xl p-6 sm:p-8 shadow-soft-lg text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div class="relative z-10">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-bold mb-1" data-lang="summary_title">Rekap Kecamatan Barambai</h2>
+              <p class="text-primary-100 text-sm" data-lang="summary_subtitle">Progress Pendataan SDGs Desa Tahun 2026</p>
+            </div>
+            <div class="text-left sm:text-right">
+              <p class="text-xs text-primary-200 mb-1" data-lang="last_update">Update Terakhir</p>
+              <p id="lastUpdate" class="text-sm font-semibold bg-white/20 px-3 py-1.5 rounded-lg inline-block">-</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+              <p class="text-xs text-primary-100 mb-1" data-lang="total_percent">Total Persentase</p>
+              <p class="text-2xl sm:text-3xl font-bold" id="totalPercent">0%</p>
+              <div class="mt-2 h-1.5 bg-white/20 rounded-full overflow-hidden">
+                <div id="totalProgressBar" class="h-full bg-white rounded-full transition-all duration-1000" style="width: 0%"></div>
+              </div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+              <p class="text-xs text-primary-100 mb-1" data-lang="avg_des">Rata-rata Desa</p>
+              <p class="text-2xl sm:text-3xl font-bold" id="avgDesa">0%</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+              <p class="text-xs text-primary-100 mb-1" data-lang="avg_rt">Rata-rata RT</p>
+              <p class="text-2xl sm:text-3xl font-bold" id="avgRT">0%</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+              <p class="text-xs text-primary-100 mb-1" data-lang="avg_kk">Rata-rata KK</p>
+              <p class="text-2xl sm:text-3xl font-bold" id="avgKK">0%</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+              <p class="text-xs text-primary-100 mb-1" data-lang="avg_individu">Rata-rata Individu</p>
+              <p class="text-2xl sm:text-3xl font-bold" id="avgIndividu">0%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Validation Warning Banner -->
+      <div id="validationWarning" class="hidden bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-xl p-4 shadow-soft">
+        <div class="flex items-start gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+          <div class="flex-1">
+            <h4 class="text-sm font-bold text-red-800 dark:text-red-300 mb-1" data-lang="warning_title">Peringatan Data Tidak Wajar</h4>
+            <p class="text-sm text-red-700 dark:text-red-400" id="warningMessage" data-lang="warning_msg">Peringatan: Data tidak wajar. Jumlah KK lebih besar dari Individu. Cek kembali Google Sheet kolom jumlah_kk_id, jumlah_kk_sdgs vs jumlah_individu_id, jumlah_individu_sdgs</p>
+            <div id="warningDetails" class="mt-2 text-xs text-red-600 dark:text-red-400"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Data Kecamatan -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-soft border border-slate-200 dark:border-slate-700 p-6 sm:p-8">
+        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+          <span data-lang="total_data_kec">Total Data Kecamatan</span>
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-5 border border-amber-200 dark:border-amber-800">
+            <div class="flex items-center justify-between mb-3">
+              <p class="text-xs font-medium text-amber-700 dark:text-amber-300" data-lang="total_des">Total Desa</p>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+            </div>
+            <p class="text-2xl font-bold text-amber-900 dark:text-amber-100 mb-1" id="totalDesaSDGS">0</p>
+            <p class="text-xs text-amber-600 dark:text-amber-400" id="totalDesaID">/ 0 Desa</p>
+            <div class="mt-3 h-2 bg-amber-200 dark:bg-amber-800 rounded-full overflow-hidden">
+              <div id="totalDesaBar" class="h-full bg-amber-600 dark:bg-amber-500 rounded-full transition-all" style="width: 0%"></div>
+            </div>
+            <p class="text-xs text-amber-700 dark:text-amber-300 mt-1 text-right font-semibold" id="totalDesaPercent">0%</p>
+          </div>
+          
+          <div class="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-5 border border-blue-200 dark:border-blue-800">
+            <div class="flex items-center justify-between mb-3">
+              <p class="text-xs font-medium text-blue-700 dark:text-blue-300" data-lang="total_rt">Total RT</p>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+            </div>
+            <p class="text-2xl font-bold text-blue-900 dark:text-blue-100 mb-1" id="totalRTSDGS">0</p>
+            <p class="text-xs text-blue-600 dark:text-blue-400" id="totalRTID">/ 0 RT</p>
+            <div class="mt-3 h-2 bg-blue-200 dark:bg-blue-800 rounded-full overflow-hidden">
+              <div id="totalRTBar" class="h-full bg-blue-600 dark:bg-blue-500 rounded-full transition-all" style="width: 0%"></div>
+            </div>
+            <p class="text-xs text-blue-700 dark:text-blue-300 mt-1 text-right font-semibold" id="totalRTPercent">0%</p>
+          </div>
+          
+          <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-5 border border-purple-200 dark:border-purple-800 tooltip">
+            <div class="tooltip-text bg-slate-800 text-white text-xs rounded py-1 px-2 -mb-1" data-lang="tooltip_kk_individu">Seharusnya Individu >= KK. Jika terbalik, cek kolom di Google Sheet</div>
+            <div class="flex items-center justify-between mb-3">
+              <p class="text-xs font-medium text-purple-700 dark:text-purple-300" data-lang="total_kk">Total KK</p>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+            </div>
+            <p class="text-2xl font-bold text-purple-900 dark:text-purple-100 mb-1" id="totalKKSDGS">0</p>
+            <p class="text-xs text-purple-600 dark:text-purple-400" id="totalKKID">/ 0 KK</p>
+            <div class="mt-3 h-2 bg-purple-200 dark:bg-purple-800 rounded-full overflow-hidden">
+              <div id="totalKKBar" class="h-full bg-purple-600 dark:bg-purple-500 rounded-full transition-all" style="width: 0%"></div>
+            </div>
+            <p class="text-xs text-purple-700 dark:text-purple-300 mt-1 text-right font-semibold" id="totalKKPercent">0%</p>
+          </div>
+          
+          <div class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-5 border border-emerald-200 dark:border-emerald-800 tooltip">
+            <div class="tooltip-text bg-slate-800 text-white text-xs rounded py-1 px-2 -mb-1" data-lang="tooltip_kk_individu">Seharusnya Individu >= KK. Jika terbalik, cek kolom di Google Sheet</div>
+            <div class="flex items-center justify-between mb-3">
+              <p class="text-xs font-medium text-emerald-700 dark:text-emerald-300" data-lang="total_individu">Total Individu</p>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+            </div>
+            <p class="text-2xl font-bold text-emerald-900 dark:text-emerald-100 mb-1" id="totalIndividuSDGS">0</p>
+            <p class="text-xs text-emerald-600 dark:text-emerald-400" id="totalIndividuID">/ 0 Individu</p>
+            <div class="mt-3 h-2 bg-emerald-200 dark:bg-emerald-800 rounded-full overflow-hidden">
+              <div id="totalIndividuBar" class="h-full bg-emerald-600 dark:bg-emerald-500 rounded-full transition-all" style="width: 0%"></div>
+            </div>
+            <p class="text-xs text-emerald-700 dark:text-emerald-300 mt-1 text-right font-semibold" id="totalIndividuPercent">0%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-soft border border-slate-200 dark:border-slate-700 p-1.5">
+        <div class="flex flex-wrap gap-1.5">
+          <button data-tab="overview" class="tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-sm font-medium transition-all bg-primary-600 text-white" data-lang="tab_overview">Overview</button>
+          <button data-tab="leaderboard" class="tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700" data-lang="tab_leaderboard">Leaderboard Desa</button>
+          <button data-tab="ranking" class="tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700" data-lang="tab_chart">Grafik Total</button>
+          <button data-tab="compare" class="tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700" data-lang="tab_compare">Perbandingan</button>
+          <button data-tab="rawdata" class="tab-btn flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700" data-lang="tab_rawdata">Data Mentah</button>
+        </div>
+      </div>
+
+      <!-- Tab: Overview -->
+      <div id="tab-overview" class="tab-content space-y-6">
+        <!-- Filter Bar -->
+        <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+          <div class="flex-1">
+            <input type="text" id="searchDesa" placeholder="Cari desa..." data-lang-placeholder="search_desa" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
+          </div>
+          <select id="filterTahun" class="px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+            <option value="" data-lang="all_years">Semua Tahun</option>
+          </select>
+          <button id="mobileExport" class="sm:hidden px-4 py-2.5 bg-slate-800 dark:bg-slate-700 text-white rounded-lg text-sm font-medium" data-lang="export_data">Export Data</button>
+        </div>
+
+        <!-- Chart Kecamatan -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-soft border border-slate-200 dark:border-slate-700 p-4 sm:p-6">
+          <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></svg>
+            <span data-lang="chart_kec">Grafik Capaian Se-Kecamatan</span>
+          </h3>
+          <div class="h-64 sm:h-80"><canvas id="kecamatanChart"></canvas></div>
+        </div>
+
+        <!-- Desa Cards -->
+        <div id="desaCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"></div>
+      </div>
+
+      <!-- Tab: Leaderboard -->
+      <div id="tab-leaderboard" class="tab-content hidden space-y-6">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-soft border border-slate-200 dark:border-slate-700 p-4 sm:p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold" data-lang="leaderboard_title">Ranking Desa Berdasarkan Total %</h3>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500 dark:text-slate-400" data-lang="legend">Legenda:</span>
+              <div class="flex items-center gap-1">
+                <div class="w-3 h-3 rounded bg-red-500"></div><span class="text-xs"><50%</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <div class="w-3 h-3 rounded bg-yellow-500"></div><span class="text-xs">50-79%</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <div class="w-3 h-3 rounded bg-emerald-500"></div><span class="text-xs">≥80%</span>
+              </div>
+            </div>
+          </div>
+          <div id="leaderboardList" class="space-y-2"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Ranking -->
+      <div id="tab-ranking" class="tab-content hidden space-y-6">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-soft border border-slate-200 dark:border-slate-700 p-4 sm:p-6">
+          <h3 class="text-lg font-semibold mb-4" data-lang="chart_total">Grafik Total Pendataan SDGs Desa Se Kecamatan</h3>
+          <div class="h-96"><canvas id="rankingChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Tab: Compare -->
+      <div id="tab-compare" class="tab-content hidden space-y-6">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-soft border border-slate-200 dark:border-slate-700 p-4 sm:p-6">
+          <h3 class="text-lg font-semibold mb-4" data-lang="compare_mode">Mode Perbandingan Desa</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <select id="compareDesa1" class="px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+              <option value="" data-lang="select_desa1">Pilih Desa 1</option>
+            </select>
+            <select id="compareDesa2" class="px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+              <option value="" data-lang="select_desa2">Pilih Desa 2</option>
+            </select>
+          </div>
+          <div class="h-80"><canvas id="compareChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Tab: Raw Data -->
+      <div id="tab-rawdata" class="tab-content hidden space-y-6">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-soft border border-slate-200 dark:border-slate-700 p-4 sm:p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <h3 class="text-lg font-semibold" data-lang="tab_rawdata">Data Mentah</h3>
+            <input type="text" id="searchRawData" placeholder="Cari..." data-lang-placeholder="search_raw" class="w-full sm:w-64 px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+          </div>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4" data-lang="rawdata_desc">Data asli dari Google Sheet untuk debugging. Cek baris dengan KK > Individu.</p>
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-sm" id="rawDataTable">
+              <thead class="bg-slate-50 dark:bg-slate-700 sticky top-0">
+                <tr>
+                  <th class="px-3 py-2 text-left text-xs font-semibold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 whitespace-nowrap" data-sort="tahun">
+                    <span data-lang="tahun">Tahun</span> <span class="sort-arrow"></span>
+                  </th>
+                  <th class="px-3 py-2 text-left text-xs font-semibold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 whitespace-nowrap" data-sort="desa">
+                    <span data-lang="desa">Desa</span> <span class="sort-arrow"></span>
+                  </th>
+                  <th class="px-3 py-2 text-right text-xs font-semibold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 whitespace-nowrap" data-sort="hasil_pendataan_sdgs_desa_target">
+                    Desa Target <span class="sort-arrow"></span>
+                  </th>
+                  <th class="px-3 py-2 text-right text-xs font-semibold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 whitespace-nowrap" data-sort="hasil_pendataan_sdgs_desa_realisasi">
+                    Desa Realisasi <span class="sort-arrow"></span>
+                  </th>
+                  <th class="px-3 py-2 text-right text-xs font-semibold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 whitespace-nowrap" data-sort="jumlah_rt_id">
+                    RT ID <span class="sort-arrow"></span>
+                  </th>
+                  <th class="px-3 py-2 text-right text-xs font-semibold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 whitespace-nowrap" data-sort="jumlah_rt_sdgs">
+                    RT SDGS <span class="sort-arrow"></span>
+                  </th>
+                  <th class="px-3 py-2 text-right text-xs font-semibold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 whitespace-nowrap" data-sort="jumlah_kk_id">
+                    KK ID <span class="sort-arrow"></span>
+                  </th>
+                  <th class="px-3 py-2 text-right text-xs font-semibold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 whitespace-nowrap" data-sort="jumlah_kk_sdgs">
+                    KK SDGS <span class="sort-arrow"></span>
+                  </th>
+                  <th class="px-3 py-2 text-right text-xs font-semibold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 whitespace-nowrap" data-sort="jumlah_individu_id">
+                    Individu ID <span class="sort-arrow"></span>
+                  </th>
+                  <th class="px-3 py-2 text-right text-xs font-semibold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 whitespace-nowrap" data-sort="jumlah_individu_sdgs">
+                    Individu SDGS <span class="sort-arrow"></span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="rawDataTableBody" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Detail Desa -->
+  <div id="desaModal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen px-4 py-8">
+      <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" id="modalOverlay"></div>
+      <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-soft-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar border border-slate-200 dark:border-slate-700">
+        <div class="sticky top-0 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between z-10">
+          <h3 id="modalTitle" class="text-xl font-bold"></h3>
+          <button id="closeModal" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <div class="p-6 space-y-6">
+          <div id="modalValidationWarning" class="hidden bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-lg p-3">
+            <div class="flex items-start gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-red-800 dark:text-red-300" data-lang="warning_title">Peringatan Data Tidak Wajar</p>
+                <p class="text-xs text-red-700 dark:text-red-400 mt-1" data-lang="warning_msg">Peringatan: Data tidak wajar. Jumlah KK lebih besar dari Individu.</p>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4" id="modalStats"></div>
+          <div>
+            <h4 class="text-sm font-semibold mb-3 text-slate-700 dark:text-slate-300" data-lang="trend_yearly">Tren Pendataan Tahunan</h4>
+            <div class="h-64"><canvas id="modalChart"></canvas></div>
+          </div>
+          <div>
+            <h4 class="text-sm font-semibold mb-3 text-slate-700 dark:text-slate-300" data-lang="detail_capaian">Detail Capaian</h4>
+            <div class="overflow-x-auto"><table class="w-full text-sm" id="modalTable"></table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="hidden fixed bottom-4 right-4 bg-slate-800 text-white px-4 py-3 rounded-lg shadow-soft-lg z-50 text-sm"></div>
+
+  <script>
+  (function() {
+    'use strict';
+    
+    const CSV_URL_ORIGINAL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQkcJkKq7teTCTK26YC0VD_A8WnaA5iqD_JnUpRMIy3apdRkHWtXrCSoit969FI2Q/pub?gid=1570559786&single=true&output=csv';
+    const CORS_PROXIES = [
+      'https://corsproxy.io/?',
+      'https://api.allorigins.win/raw?url='
+    ];
+    const DESA_LIST = ['Barambai', 'Sungai Kali', 'Pendalaman', 'Handil Barabai', 'Bagagap', 'Barambai Karya Tani', 'Pendalaman Baru', 'Karya Baru', 'Barambai Kolam Kiri', 'Barambai Kolam Kanan', 'Barambai Kolam Kiri Dalam'];
+    const REFRESH_INTERVAL = 5 * 60 * 1000;
+    
+    const EXPECTED_HEADERS = ['tahun', 'desa', 'hasil_pendataan_sdgs_desa_target', 'hasil_pendataan_sdgs_desa_realisasi', 'jumlah_rt_id', 'jumlah_rt_sdgs', 'jumlah_kk_id', 'jumlah_kk_sdgs', 'jumlah_individu_id', 'jumlah_individu_sdgs', 'total_persentase_pendataan'];
+    
+    // Language translations
+    const TRANSLATIONS = {
+      id: {
+        dashboard_subtitle: 'Dashboard Progress Pendataan',
+        summary_title: 'Rekap Kecamatan Barambai',
+        summary_subtitle: 'Progress Pendataan SDGs Desa Tahun 2026',
+        last_update: 'Update Terakhir',
+        total_percent: 'Total Persentase',
+        avg_des: 'Rata-rata Desa',
+        avg_rt: 'Rata-rata RT',
+        avg_kk: 'Rata-rata KK',
+        avg_individu: 'Rata-rata Individu',
+        tab_overview: 'Overview',
+        tab_leaderboard: 'Leaderboard Desa',
+        tab_chart: 'Grafik Total',
+        tab_compare: 'Perbandingan',
+        tab_rawdata: 'Data Mentah',
+        search_desa: 'Cari desa...',
+        search_raw: 'Cari data...',
+        all_years: 'Semua Tahun',
+        export_data: 'Export Data',
+        chart_kec: 'Grafik Capaian Se-Kecamatan',
+        legend: 'Legenda:',
+        leaderboard_title: 'Ranking Desa Berdasarkan Total %',
+        chart_total: 'Grafik Total Pendataan SDGs Desa Se Kecamatan',
+        compare_mode: 'Mode Perbandingan Desa',
+        select_desa1: 'Pilih Desa 1',
+        select_desa2: 'Pilih Desa 2',
+        trend_yearly: 'Tren Pendataan Tahunan',
+        detail_capaian: 'Detail Capaian',
+        excel: 'Excel',
+        pdf: 'PDF',
+        dark_mode: 'Mode Gelap',
+        loading: 'Memuat data dari Google Sheet...',
+        error_title: 'Gagal Memuat Data',
+        error_msg: 'Tidak dapat mengambil data dari Google Sheet. Periksa koneksi atau coba lagi nanti.',
+        retry: 'Coba Lagi',
+        debug: 'Lihat Debug Info',
+        desa: 'Desa',
+        rt: 'RT',
+        kk: 'KK',
+        individu: 'Individu',
+        total: 'Total',
+        target: 'Target',
+        realisasi: 'Realisasi',
+        kategori: 'Kategori',
+        tahun: 'Tahun',
+        badge_rt: '100% RT',
+        badge_kk: '100% KK',
+        badge_individu: '100% Individu',
+        badge_tuntas: 'Desa Tuntas',
+        badge_tercepat: 'Tercepat',
+        total_data_kec: 'Total Data Kecamatan',
+        total_des: 'Total Desa',
+        total_rt: 'Total RT',
+        total_kk: 'Total KK',
+        total_individu: 'Total Individu',
+        rawdata_desc: 'Data asli dari Google Sheet untuk debugging. Cek baris dengan KK > Individu.',
+        warning_title: 'Peringatan Data Tidak Wajar',
+        warning_msg: 'Peringatan: Data tidak wajar. Jumlah KK lebih besar dari Individu. Cek kembali Google Sheet kolom jumlah_kk_id, jumlah_kk_sdgs vs jumlah_individu_id, jumlah_individu_sdgs',
+        tooltip_kk_individu: 'Seharusnya Individu >= KK. Jika terbalik, cek kolom di Google Sheet'
+      },
+      bjn: {
+        dashboard_subtitle: 'Dashboard Laporan Pangulahan Data',
+        summary_title: 'Ringkasan Kacamatan Barambai',
+        summary_subtitle: 'Laporan Pangulahan SDGs Kampung Tahun 2026',
+        last_update: 'Panganyarnya Diubah',
+        total_percent: 'Jumlah Parak Habis',
+        avg_des: 'Rata-rata Kampung',
+        avg_rt: 'Rata-rata RT',
+        avg_kk: 'Rata-rata KK',
+        avg_individu: 'Rata-rata Urang',
+        tab_overview: 'Lihati',
+        tab_leaderboard: 'Urutan Kampung',
+        tab_chart: 'Grafik Sabarataan',
+        tab_compare: 'Bandingakan',
+        tab_rawdata: 'Data Kasar',
+        search_desa: 'Gulati kampung...',
+        search_raw: 'Gulati data...',
+        all_years: 'Sabarataan Tahun',
+        export_data: 'Unduh Data',
+        chart_kec: 'Grafik Pancapaian Sa-Kacamatan',
+        legend: 'Tanda:',
+        leaderboard_title: 'Urutan Kampung Manurut Jumlah %',
+        chart_total: 'Grafik Sabarataan Pangulahan SDGs Kampung Sa Kacamatan',
+        compare_mode: 'Mode Bandingakan Kampung',
+        select_desa1: 'Pilih Kampung 1',
+        select_desa2: 'Pilih Kampung 2',
+        trend_yearly: 'Pargarak Pangulahan Tiap Tahun',
+        detail_capaian: 'Rinci Pancapaian',
+        excel: 'Excel',
+        pdf: 'Unduh PDF',
+        dark_mode: 'Mode Galap',
+        loading: 'Muat data matan Google Sheet...',
+        error_title: 'Gagal Muat Data',
+        error_msg: 'Kada kawa ambil data matan Google Sheet. Pariksa jaringan atawa cubai pulang.',
+        retry: 'Cubai Pulang',
+        debug: 'Lihat Info Debug',
+        desa: 'Kampung',
+        rt: 'RT',
+        kk: 'Kartu Keluarga',
+        individu: 'Urang',
+        total: 'Sabarataan',
+        target: 'Target',
+        realisasi: 'Sudah Dikerja',
+        kategori: 'Macam',
+        tahun: 'Tahun',
+        badge_rt: '100% RT',
+        badge_kk: '100% KK',
+        badge_individu: '100% Urang',
+        badge_tuntas: 'Kampung Tuntas',
+        badge_tercepat: 'Paling Gancang',
+        total_data_kec: 'Jumlah Data Sakacamatan',
+        total_des: 'Jumlah Kampung',
+        total_rt: 'Jumlah RT',
+        total_kk: 'Jumlah Kartu Keluarga',
+        total_individu: 'Jumlah Urang',
+        rawdata_desc: 'Data asli matan Google Sheet gasan mariksa. Pariksa baris nang KK > Urang.',
+        warning_title: 'Ingatkan Data Kada Masuk Akal',
+        warning_msg: 'Ingatkan: Data kada masuk akal. Jumlah KK labih ganal pada Urang. Pariksa pulang Google Sheet kolom jumlah_kk_id, jumlah_kk_sdgs vs jumlah_individu_id, jumlah_individu_sdgs',
+        tooltip_kk_individu: 'Sapatutnya Urang >= KK. Amun tabalik, pariksa kolom di Google Sheet'
+      }
+    };
+    
+    let rawData = [];
+    let processedData = {};
+    let allYears = [];
+    let currentYearFilter = '';
+    let chartInstances = {};
+    let darkMode = localStorage.getItem('darkMode') === 'true';
+    let currentLang = localStorage.getItem('lang') || 'id';
+    let currentFetchDebug = [];
+    let fastestDesa = null;
+    let kecamatanTotals = {};
+    let validationWarnings = [];
+    let currentSortColumn = 'tahun';
+    let currentSortOrder = 'desc';
+
+    if (darkMode) document.documentElement.classList.add('dark');
+
+    function t(key) {
+      return TRANSLATIONS[currentLang][key] || TRANSLATIONS.id[key] || key;
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('id-ID').format(Math.round(num));
+    }
+
+    function updateLanguage() {
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        const key = el.dataset.lang;
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          el.placeholder = t(key);
+        } else {
+          el.textContent = t(key);
+        }
+      });
+      document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+        const key = el.dataset.langPlaceholder;
+        el.placeholder = t(key);
+      });
+      document.querySelectorAll('[data-lang-title]').forEach(el => {
+        const key = el.dataset.langTitle;
+        el.title = t(key);
+      });
+      document.getElementById('langToggle').value = currentLang;
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+
+    function updateLoadingText(text) {
+      document.getElementById('loadingText').textContent = text;
+      console.log('[Dashboard]', text);
+    }
+
+    function loadScript(src, fallbackSrc) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = () => {
+          if (fallbackSrc) {
+            const fb = document.createElement('script');
+            fb.src = fallbackSrc;
+            fb.onload = resolve;
+            fb.onerror = reject;
+            document.head.appendChild(fb);
+          } else reject();
+        };
+        document.head.appendChild(script);
+      });
+    }
+
+    Promise.all([
+      loadScript('https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js', 'https://unpkg.com/chart.js@4.4.1/dist/chart.umd.min.js'),
+      loadScript('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js', 'https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js'),
+      loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js', 'https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js')
+    ]).then(() => {
+      console.log('[Dashboard] All libraries loaded');
+      updateLanguage();
+      init();
+    }).catch((err) => {
+      console.error('[Dashboard] Failed to load libraries:', err);
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('errorState').classList.remove('hidden');
+      document.getElementById('errorMessage').textContent = 'Gagal memuat library. Periksa koneksi internet.';
+    });
+
+    async function fetchWithFallback(url) {
+      currentFetchDebug = [];
+      const urlsToTry = [url, ...CORS_PROXIES.map(proxy => proxy + encodeURIComponent(url))];
+      
+      for (let i = 0; i < urlsToTry.length; i++) {
+        const fetchUrl = urlsToTry[i];
+        const isProxy = i > 0;
+        const proxyName = isProxy ? CORS_PROXIES[i - 1] : 'Direct';
+        
+        try {
+          updateLoadingText(isProxy ? `Mencoba proxy ${i}...` : 'Mengambil data langsung...');
+          console.log(`[Fetch] Attempt ${i + 1}: ${proxyName}`, fetchUrl);
+          
+          const res = await fetch(fetchUrl + '&t=' + Date.now(), {
+            method: 'GET',
+            cache: 'no-store',
+            headers: {
+              'Accept': 'text/csv,text/plain,*/*'
+            }
+          });
+          
+          console.log(`[Fetch] Response status: ${res.status}`);
+          currentFetchDebug.push({ url: fetchUrl, status: res.status, proxy: proxyName });
+          
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+          }
+          
+          const text = await res.text();
+          console.log(`[Fetch] Data received: ${text.length} chars, Preview:`, text.substring(0, 200));
+          
+          if (text.length < 50 || !text.includes('tahun') || !text.includes('desa')) {
+            throw new Error('Data CSV tidak valid atau kosong');
+          }
+          
+          updateLoadingText('Data berhasil dimuat!');
+          return text;
+          
+        } catch (err) {
+          console.error(`[Fetch] Attempt ${i + 1} failed:`, err);
+          currentFetchDebug.push({ url: fetchUrl, error: err.message, proxy: proxyName });
+          
+          if (i === urlsToTry.length - 1) {
+            throw new Error(`Semua metode fetch gagal. Error terakhir: ${err.message}`);
+          }
+        }
+      }
+    }
+
+    async function fetchData() {
+      try {
+        const csvText = await fetchWithFallback(CSV_URL_ORIGINAL);
+        parseCSV(csvText);
+        
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleString(currentLang === 'bjn' ? 'id-ID' : 'id-ID', { 
+          day: 'numeric', month: 'short', year: 'numeric', 
+          hour: '2-digit', minute: '2-digit' 
+        });
+        return true;
+      } catch (err) {
+        console.error('[FetchData] Final error:', err);
+        throw err;
+      }
+    }
+
+    function parseCSV(text) {
+      console.log('[ParseCSV] Starting parse...');
+      const lines = text.trim().split('\n').filter(l => l.trim());
+      if (lines.length < 2) {
+        throw new Error('CSV kosong atau hanya header');
+      }
+      
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+      console.log('[ParseCSV] Headers found:', headers);
+      
+      const headerMap = {};
+      headers.forEach((h, i) => {
+        headerMap[h] = i;
+      });
+      
+      rawData = [];
+      allYears = new Set();
+      validationWarnings = [];
+      
+      for (let lineIdx = 1; lineIdx < lines.length; lineIdx++) {
+        const line = lines[lineIdx];
+        if (!line.trim()) continue;
+        
+        const values = line.split(',').map(v => v.trim());
+        const obj = {};
+        
+        EXPECTED_HEADERS.forEach(expectedHeader => {
+          const idx = headerMap[expectedHeader];
+          if (idx !== undefined && values[idx] !== undefined) {
+            const val = values[idx].trim();
+            const numVal = Number(val);
+            obj[expectedHeader] = val === '' || isNaN(numVal) ? val : numVal;
+          } else {
+            obj[expectedHeader] = '';
+          }
+        });
+        
+        if (obj.desa && obj.tahun) {
+          rawData.push(obj);
+          allYears.add(Number(obj.tahun));
+          
+          // Validate KK vs Individu per row
+          const kkId = Number(obj.jumlah_kk_id) || 0;
+          const kkSdgs = Number(obj.jumlah_kk_sdgs) || 0;
+          const indivId = Number(obj.jumlah_individu_id) || 0;
+          const indivSdgs = Number(obj.jumlah_individu_sdgs) || 0;
+          
+          if (kkId > indivId && indivId > 0) {
+            validationWarnings.push({
+              desa: obj.desa,
+              tahun: obj.tahun,
+              type: 'kk_id > indiv_id',
+              kk: kkId,
+              individu: indivId
+            });
+          }
+          if (kkSdgs > indivSdgs && indivSdgs > 0) {
+            validationWarnings.push({
+              desa: obj.desa,
+              tahun: obj.tahun,
+              type: 'kk_sdgs > indiv_sdgs',
+              kk: kkSdgs,
+              individu: indivSdgs
+            });
+          }
+        }
+      }
+      
+      allYears = Array.from(allYears).sort((a, b) => b - a);
+      console.log('[ParseCSV] Parsed rows:', rawData.length, 'Years:', allYears, 'Warnings:', validationWarnings.length);
+      
+      if (rawData.length === 0) {
+        throw new Error('Tidak ada data valid setelah parsing CSV');
+      }
+      
+      processData();
+    }
+
+    function processData() {
+      console.log('[ProcessData] Processing', rawData.length, 'rows');
+      processedData = {};
+      
+      DESA_LIST.forEach(desa => {
+        let desaRows = rawData.filter(r => {
+          const rowDesa = String(r.desa).trim().toLowerCase();
+          const targetDesa = String(desa).trim().toLowerCase();
+          return rowDesa === targetDesa || rowDesa.includes(targetDesa) || targetDesa.includes(rowDesa);
+        });
+        
+        if (currentYearFilter) {
+          desaRows = desaRows.filter(r => Number(r.tahun) === Number(currentYearFilter));
+        }
+        
+        console.log(`[ProcessData] ${desa}: found ${desaRows.length} rows`);
+        
+        if (desaRows.length === 0) return;
+        
+        const latestRow = desaRows.reduce((latest, row) => {
+          return Number(row.tahun) > Number(latest.tahun) ? row : latest;
+        }, desaRows[0]);
+        
+        const desaRealisasi = Number(latestRow.hasil_pendataan_sdgs_desa_realisasi) || 0;
+        const desaTarget = Number(latestRow.hasil_pendataan_sdgs_desa_target) || 1;
+        const rtSdgs = Number(latestRow.jumlah_rt_sdgs) || 0;
+        const rtId = Number(latestRow.jumlah_rt_id) || 1;
+        const kkSdgs = Number(latestRow.jumlah_kk_sdgs) || 0;
+        const kkId = Number(latestRow.jumlah_kk_id) || 1;
+        const indivSdgs = Number(latestRow.jumlah_individu_sdgs) || 0;
+        const indivId = Number(latestRow.jumlah_individu_id) || 1;
+        
+        const desaPercent = desaTarget > 0 ? (desaRealisasi / desaTarget * 100) : 0;
+        const rtPercent = rtId > 0 ? (rtSdgs / rtId * 100) : 0;
+        const kkPercent = kkId > 0 ? (kkSdgs / kkId * 100) : 0;
+        const indivPercent = indivId > 0 ? (indivSdgs / indivId * 100) : 0;
+        
+        let totalPercent = Number(latestRow.total_persentase_pendataan);
+        if (isNaN(totalPercent) || totalPercent === 0) {
+          totalPercent = (desaPercent + rtPercent + kkPercent + indivPercent) / 4;
+        }
+        
+        // Generate badges
+        const badges = [];
+        if (rtSdgs >= rtId && rtId > 0) badges.push({ text: t('badge_rt'), color: 'blue' });
+        if (kkSdgs >= kkId && kkId > 0) badges.push({ text: t('badge_kk'), color: 'purple' });
+        if (indivSdgs >= indivId && indivId > 0) badges.push({ text: t('badge_individu'), color: 'emerald' });
+        if (desaRealisasi >= desaTarget && rtSdgs >= rtId && kkSdgs >= kkId && indivSdgs >= indivId) {
+          badges.push({ text: t('badge_tuntas'), color: 'amber' });
+        }
+        
+        const hasWarning = (kkId > indivId && indivId > 0) || (kkSdgs > indivSdgs && indivSdgs > 0);
+        
+        processedData[desa] = {
+          latest: latestRow,
+          history: desaRows.sort((a, b) => Number(a.tahun) - Number(b.tahun)),
+          stats: {
+            totalPercent: Math.min(100, totalPercent),
+            desaPercent, rtPercent, kkPercent, indivPercent,
+            desaRealisasi, desaTarget, rtSdgs, rtId, kkSdgs, kkId, indivSdgs, indivId,
+            badges,
+            hasWarning
+          }
+        };
+      });
+      
+      // Find fastest desa (highest total %)
+      let maxPercent = -1;
+      Object.entries(processedData).forEach(([desa, data]) => {
+        if (data.stats.totalPercent > maxPercent) {
+          maxPercent = data.stats.totalPercent;
+          fastestDesa = desa;
+        }
+      });
+      
+      // Add "Tercepat" badge
+      if (fastestDesa && processedData[fastestDesa]) {
+        processedData[fastestDesa].stats.badges.push({ text: t('badge_tercepat'), color: 'pink' });
+      }
+      
+      console.log('[ProcessData] Processed data keys:', Object.keys(processedData));
+    }
+
+    function calcKecamatanSummary() {
+      const desaStats = Object.values(processedData).map(d => d.stats);
+      if (desaStats.length === 0) return { total: 0, desa: 0, rt: 0, kk: 0, indiv: 0 };
+      
+      const avg = (key) => desaStats.reduce((sum, s) => sum + s[key], 0) / desaStats.length;
+      return {
+        total: avg('totalPercent'),
+        desa: avg('desaPercent'),
+        rt: avg('rtPercent'),
+        kk: avg('kkPercent'),
+        indiv: avg('indivPercent')
+      };
+    }
+
+    function calcKecamatanTotals() {
+      const totals = {
+        desaTarget: 0, desaRealisasi: 0,
+        rtId: 0, rtSdgs: 0,
+        kkId: 0, kkSdgs: 0,
+        indivId: 0, indivSdgs: 0
+      };
+      
+      Object.values(processedData).forEach(data => {
+        const s = data.stats;
+        totals.desaTarget += s.desaTarget;
+        totals.desaRealisasi += s.desaRealisasi;
+        totals.rtId += s.rtId;
+        totals.rtSdgs += s.rtSdgs;
+        totals.kkId += s.kkId;
+        totals.kkSdgs += s.kkSdgs;
+        totals.indivId += s.indivId;
+        totals.indivSdgs += s.indivSdgs;
+      });
+      
+      // Calculate percentages
+      totals.desaPercent = totals.desaTarget > 0 ? (totals.desaRealisasi / totals.desaTarget * 100) : 0;
+      totals.rtPercent = totals.rtId > 0 ? (totals.rtSdgs / totals.rtId * 100) : 0;
+      totals.kkPercent = totals.kkId > 0 ? (totals.kkSdgs / totals.kkId * 100) : 0;
+      totals.indivPercent = totals.indivId > 0 ? (totals.indivSdgs / totals.indivId * 100) : 0;
+      
+      return totals;
+    }
+
+    function renderSummary() {
+      const summary = calcKecamatanSummary();
+      document.getElementById('totalPercent').textContent = summary.total.toFixed(1) + '%';
+      document.getElementById('totalProgressBar').style.width = summary.total + '%';
+      document.getElementById('avgDesa').textContent = summary.desa.toFixed(1) + '%';
+      document.getElementById('avgRT').textContent = summary.rt.toFixed(1) + '%';
+      document.getElementById('avgKK').textContent = summary.kk.toFixed(1) + '%';
+      document.getElementById('avgIndividu').textContent = summary.indiv.toFixed(1) + '%';
+      
+      // Render kecamatan totals
+      kecamatanTotals = calcKecamatanTotals();
+      document.getElementById('totalDesaSDGS').textContent = formatNumber(kecamatanTotals.desaRealisasi);
+      document.getElementById('totalDesaID').textContent = `/ ${formatNumber(kecamatanTotals.desaTarget)} Desa`;
+      document.getElementById('totalDesaPercent').textContent = kecamatanTotals.desaPercent.toFixed(1) + '%';
+      document.getElementById('totalDesaBar').style.width = kecamatanTotals.desaPercent + '%';
+      
+      document.getElementById('totalRTSDGS').textContent = formatNumber(kecamatanTotals.rtSdgs);
+      document.getElementById('totalRTID').textContent = `/ ${formatNumber(kecamatanTotals.rtId)} RT`;
+      document.getElementById('totalRTPercent').textContent = kecamatanTotals.rtPercent.toFixed(1) + '%';
+      document.getElementById('totalRTBar').style.width = kecamatanTotals.rtPercent + '%';
+      
+      document.getElementById('totalKKSDGS').textContent = formatNumber(kecamatanTotals.kkSdgs);
+      document.getElementById('totalKKID').textContent = `/ ${formatNumber(kecamatanTotals.kkId)} KK`;
+      document.getElementById('totalKKPercent').textContent = kecamatanTotals.kkPercent.toFixed(1) + '%';
+      document.getElementById('totalKKBar').style.width = kecamatanTotals.kkPercent + '%';
+      
+      document.getElementById('totalIndividuSDGS').textContent = formatNumber(kecamatanTotals.indivSdgs);
+      document.getElementById('totalIndividuID').textContent = `/ ${formatNumber(kecamatanTotals.indivId)} Individu`;
+      document.getElementById('totalIndividuPercent').textContent = kecamatanTotals.indivPercent.toFixed(1) + '%';
+      document.getElementById('totalIndividuBar').style.width = kecamatanTotals.indivPercent + '%';
+      
+      // Show validation warning if KK > Individu at kecamatan level
+      const warningDiv = document.getElementById('validationWarning');
+      const warningDetails = document.getElementById('warningDetails');
+      if ((kecamatanTotals.kkId > kecamatanTotals.indivId && kecamatanTotals.indivId > 0) || 
+          (kecamatanTotals.kkSdgs > kecamatanTotals.indivSdgs && kecamatanTotals.indivSdgs > 0)) {
+        warningDiv.classList.remove('hidden');
+        let details = [];
+        if (kecamatanTotals.kkId > kecamatanTotals.indivId) {
+          details.push(`KK ID: ${formatNumber(kecamatanTotals.kkId)} > Individu ID: ${formatNumber(kecamatanTotals.indivId)}`);
+        }
+        if (kecamatanTotals.kkSdgs > kecamatanTotals.indivSdgs) {
+          details.push(`KK SDGS: ${formatNumber(kecamatanTotals.kkSdgs)} > Individu SDGS: ${formatNumber(kecamatanTotals.indivSdgs)}`);
+        }
+        warningDetails.textContent = details.join(' | ');
+      } else {
+        warningDiv.classList.add('hidden');
+      }
+    }
+
+    function renderCards(filterText = '') {
+      const container = document.getElementById('desaCards');
+      container.innerHTML = '';
+      
+      const filtered = DESA_LIST.filter(d => d.toLowerCase().includes(filterText.toLowerCase()));
+      
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="col-span-full text-center py-12 text-slate-500 dark:text-slate-400">Tidak ada data desa ditemukan</div>';
+        return;
+      }
+      
+      filtered.forEach((desa, idx) => {
+        const data = processedData[desa];
+        if (!data) return;
+        const s = data.stats;
+        
+        const card = document.createElement('div');
+        
+        // Alert color based on total %
+        let borderClass = '';
+        if (s.hasWarning) {
+          borderClass = 'border-l-4 border-red-600 bg-red-50/50 dark:bg-red-900/10';
+        } else if (s.totalPercent < 50) borderClass = 'border-l-4 border-red-500';
+        else if (s.totalPercent < 80) borderClass = 'border-l-4 border-yellow-500';
+        else borderClass = 'border-l-4 border-emerald-500';
+        
+        card.className = `bg-white dark:bg-slate-800 rounded-xl shadow-soft border border-slate-200 dark:border-slate-700 p-5 card-hover cursor-pointer slide-in ${borderClass}`;
+        card.style.animationDelay = (idx * 50) + 'ms';
+        card.onclick = () => showDesaModal(desa);
+        
+        const colorClass = s.totalPercent >= 80 ? 'text-emerald-600 dark:text-emerald-400' : 
+                          s.totalPercent >= 50 ? 'text-amber-600 dark:text-amber-400' : 
+                          'text-red-600 dark:text-red-400';
+        
+        const badgesHtml = s.badges.map(b => {
+          const colorMap = {
+            blue: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
+            purple: 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300',
+            emerald: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300',
+            amber: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300',
+            pink: 'bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300'
+          };
+          return `<span class="badge ${colorMap[b.color] || ''}">${b.text}</span>`;
+        }).join('');
+        
+        const warningIcon = s.hasWarning ? `
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        ` : '';
+        
+        card.innerHTML = `
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <h3 class="font-bold text-base mb-1">${desa}</h3>
+                ${warningIcon}
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">${t('tahun')} ${data.latest.tahun || 2026}</p>
+            </div>
+            <div class="text-right">
+              <p class="text-2xl font-bold ${colorClass}">${s.totalPercent.toFixed(1)}%</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">${t('total')}</p>
+            </div>
+          </div>
+          ${s.hasWarning ? `<div class="text-xs text-red-600 dark:text-red-400 mb-2 font-medium">⚠️ Data KK > Individu</div>` : ''}
+          <div class="flex flex-wrap gap-1 mb-3">${badgesHtml}</div>
+          <div class="space-y-2.5 mb-4">
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-slate-600 dark:text-slate-400">${t('rt')}</span>
+                <span class="font-medium">${s.rtPercent.toFixed(1)}%</span>
+              </div>
+              <div class="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 rounded-full transition-all" style="width: ${s.rtPercent}%"></div>
+              </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-slate-600 dark:text-slate-400">${t('kk')}</span>
+                <span class="font-medium">${s.kkPercent.toFixed(1)}%</span>
+              </div>
+              <div class="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div class="h-full bg-purple-500 rounded-full transition-all" style="width: ${s.kkPercent}%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-slate-600 dark:text-slate-400">${t('individu')}</span>
+                <span class="font-medium">${s.indivPercent.toFixed(1)}%</span>
+              </div>
+              <div class="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full transition-all" style="width: ${s.indivPercent}%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="pt-3 border-t border-slate-100 dark:border-slate-700">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-500 dark:text-slate-400">${t('rt')}: ${s.rtSdgs}/${s.rtId} | ${t('kk')}: ${s.kkSdgs}/${s.kkId}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboardList');
+      container.innerHTML = '';
+      
+      const sorted = Object.entries(processedData)
+        .sort((a, b) => b[1].stats.totalPercent - a[1].stats.totalPercent);
+      
+      sorted.forEach(([desa, data], idx) => {
+        const s = data.stats;
+        const rank = idx + 1;
+        
+        let bgClass = '';
+        if (rank === 1) bgClass = 'bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-2 border-yellow-400';
+        else if (rank === 2) bgClass = 'bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-700/50 dark:to-slate-600/50 border-2 border-slate-400';
+        else if (rank === 3) bgClass = 'bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-2 border-orange-400';
+        else bgClass = 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700';
+        
+        let alertColor = '';
+        if (s.hasWarning) alertColor = 'bg-red-600';
+        else if (s.totalPercent < 50) alertColor = 'bg-red-500';
+        else if (s.totalPercent < 80) alertColor = 'bg-yellow-500';
+        else alertColor = 'bg-emerald-500';
+        
+        const item = document.createElement('div');
+        item.className = `rounded-xl p-4 shadow-soft cursor-pointer hover:shadow-soft-lg transition-all ${bgClass}`;
+        item.onclick = () => showDesaModal(desa);
+        
+        const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
+        
+        item.innerHTML = `
+          <div class="flex items-center gap-4">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-soft">
+              ${medal || rank}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <h4 class="font-bold text-base truncate">${desa}</h4>
+                ${s.hasWarning ? '<span class="text-red-600 dark:text-red-400 text-xs">⚠️</span>' : ''}
+                <div class="w-3 h-3 rounded-full ${alertColor}" title="${s.totalPercent.toFixed(1)}%"></div>
+              </div>
+              <div class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400">
+                <span>${t('rt')}: ${s.rtPercent.toFixed(0)}%</span>
+                <span>${t('kk')}: ${s.kkPercent.toFixed(0)}%</span>
+                <span>${t('individu')}: ${s.indivPercent.toFixed(0)}%</span>
+              </div>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <p class="text-2xl font-bold ${s.totalPercent >= 80 ? 'text-emerald-600 dark:text-emerald-400' : s.totalPercent >= 50 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400'}">${s.totalPercent.toFixed(1)}%</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">${t('total')}</p>
+            </div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function renderKecamatanChart() {
+      const ctx = document.getElementById('kecamatanChart');
+      if (chartInstances.kecamatan) chartInstances.kecamatan.destroy();
+      
+      const desaNames = Object.keys(processedData);
+      const data = desaNames.map(d => processedData[d].stats.totalPercent);
+      
+      chartInstances.kecamatan = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: desaNames,
+          datasets: [{
+            label: t('total_percent'),
+            data: data,
+            backgroundColor: 'rgba(14, 165, 233, 0.8)',
+            borderColor: 'rgba(14, 165, 233, 1)',
+            borderWidth: 2,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ctx.parsed.y.toFixed(1) + '%'
+              }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } },
+            x: { ticks: { maxRotation: 45, minRotation: 45 } }
+          }
+        }
+      });
+    }
+
+    function renderRankingChart() {
+      const ctx = document.getElementById('rankingChart');
+      if (chartInstances.ranking) chartInstances.ranking.destroy();
+      
+      const sorted = Object.entries(processedData)
+        .sort((a, b) => b[1].stats.totalPercent - a[1].stats.totalPercent);
+      
+      chartInstances.ranking = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: sorted.map(([d]) => d),
+          datasets: [{
+            label: t('total') + ' %',
+            data: sorted.map(([,d]) => d.stats.totalPercent),
+            backgroundColor: sorted.map(([,d], i) => 
+              i === 0 ? 'rgba(16, 185, 129, 0.8)' : 
+              i === 1 ? 'rgba(59, 130, 246, 0.8)' : 
+              i === 2 ? 'rgba(251, 146, 60, 0.8)' : 
+              'rgba(148, 163, 184, 0.6)'
+            ),
+            borderWidth: 0,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ctx.parsed.x.toFixed(1) + '%'
+              }
+            }
+          },
+          scales: {
+            x: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
+          }
+        }
+      });
+    }
+
+    function showDesaModal(desa) {
+      const data = processedData[desa];
+      if (!data) return;
+      
+      document.getElementById('modalTitle').textContent = t('detail_capaian') + ': ' + desa;
+      document.getElementById('desaModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      
+      const s = data.stats;
+      
+      // Show validation warning if applicable
+      const modalWarning = document.getElementById('modalValidationWarning');
+      if (s.hasWarning) {
+        modalWarning.classList.remove('hidden');
+      } else {
+        modalWarning.classList.add('hidden');
+      }
+      
+      document.getElementById('modalStats').innerHTML = `
+        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
+          <p class="text-xs text-blue-600 dark:text-blue-400 mb-1">${t('rt')}</p>
+          <p class="text-2xl font-bold text-blue-700 dark:text-blue-300">${s.rtPercent.toFixed(1)}%</p>
+          <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">${s.rtSdgs}/${s.rtId}</p>
+        </div>
+        <div class="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-800">
+          <p class="text-xs text-purple-600 dark:text-purple-400 mb-1">${t('kk')}</p>
+          <p class="text-2xl font-bold text-purple-700 dark:text-purple-300">${s.kkPercent.toFixed(1)}%</p>
+          <p class="text-xs text-purple-600 dark:text-purple-400 mt-1">${s.kkSdgs}/${s.kkId}</p>
+        </div>
+        <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4 border border-emerald-200 dark:border-emerald-800">
+          <p class="text-xs text-emerald-600 dark:text-emerald-400 mb-1">${t('individu')}</p>
+          <p class="text-2xl font-bold text-emerald-700 dark:text-emerald-300">${s.indivPercent.toFixed(1)}%</p>
+          <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">${s.indivSdgs}/${s.indivId}</p>
+        </div>
+        <div class="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-4 border border-amber-200 dark:border-amber-800">
+          <p class="text-xs text-amber-600 dark:text-amber-400 mb-1">${t('desa')}</p>
+          <p class="text-2xl font-bold text-amber-700 dark:text-amber-300">${s.desaPercent.toFixed(1)}%</p>
+          <p class="text-xs text-amber-600 dark:text-amber-400 mt-1">${s.desaRealisasi}/${s.desaTarget}</p>
+        </div>
+      `;
+      
+      document.getElementById('modalTable').innerHTML = `
+        <thead class="bg-slate-50 dark:bg-slate-700">
+          <tr>
+            <th class="px-4 py-2 text-left text-xs font-semibold">${t('kategori')}</th>
+            <th class="px-4 py-2 text-right text-xs font-semibold">${t('target')} ID</th>
+            <th class="px-4 py-2 text-right text-xs font-semibold">${t('realisasi')} SDGS</th>
+            <th class="px-4 py-2 text-right text-xs font-semibold">${t('total_percent')}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+          <tr><td class="px-4 py-2.5">${t('desa')}</td><td class="px-4 py-2.5 text-right">${s.desaTarget}</td><td class="px-4 py-2.5 text-right">${s.desaRealisasi}</td><td class="px-4 py-2.5 text-right font-medium">${s.desaPercent.toFixed(1)}%</td></tr>
+          <tr><td class="px-4 py-2.5">${t('rt')}</td><td class="px-4 py-2.5 text-right">${s.rtId}</td><td class="px-4 py-2.5 text-right">${s.rtSdgs}</td><td class="px-4 py-2.5 text-right font-medium">${s.rtPercent.toFixed(1)}%</td></tr>
+          <tr class="${s.kkId > s.indivId && s.indivId > 0 ? 'bg-red-50 dark:bg-red-900/10' : ''}"><td class="px-4 py-2.5">${t('kk')}</td><td class="px-4 py-2.5 text-right">${s.kkId}</td><td class="px-4 py-2.5 text-right">${s.kkSdgs}</td><td class="px-4 py-2.5 text-right font-medium">${s.kkPercent.toFixed(1)}%</td></tr>
+          <tr class="${s.kkId > s.indivId && s.indivId > 0 ? 'bg-red-50 dark:bg-red-900/10' : ''}"><td class="px-4 py-2.5">${t('individu')}</td><td class="px-4 py-2.5 text-right">${s.indivId}</td><td class="px-4 py-2.5 text-right">${s.indivSdgs}</td><td class="px-4 py-2.5 text-right font-medium">${s.indivPercent.toFixed(1)}%</td></tr>
+        </tbody>
+      `;
+      
+      const ctx = document.getElementById('modalChart');
+      if (chartInstances.modal) chartInstances.modal.destroy();
+      
+      const tahunData = data.history;
+      chartInstances.modal = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: tahunData.map(d => d.tahun),
+          datasets: [
+            {
+              label: t('rt') + ' %',
+              data: tahunData.map(d => {
+                const id = Number(d.jumlah_rt_id) || 1;
+                const sdgs = Number(d.jumlah_rt_sdgs) || 0;
+                return id > 0 ? (sdgs / id * 100) : 0;
+              }),
+              borderColor: 'rgb(59, 130, 246)',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              tension: 0.4
+            },
+            {
+              label: t('kk') + ' %',
+              data: tahunData.map(d => {
+                const id = Number(d.jumlah_kk_id) || 1;
+                const sdgs = Number(d.jumlah_kk_sdgs) || 0;
+                return id > 0 ? (sdgs / id * 100) : 0;
+              }),
+              borderColor: 'rgb(168, 85, 247)',
+              backgroundColor: 'rgba(168, 85, 247, 0.1)',
+              tension: 0.4
+            },
+            {
+              label: t('individu') + ' %',
+              data: tahunData.map(d => {
+                const id = Number(d.jumlah_individu_id) || 1;
+                const sdgs = Number(d.jumlah_individu_sdgs) || 0;
+                return id > 0 ? (sdgs / id * 100) : 0;
+              }),
+              borderColor: 'rgb(16, 185, 129)',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              tension: 0.4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } }
+        }
+      });
+    }
+
+    function renderRawDataTable(searchText = '') {
+      const tbody = document.getElementById('rawDataTableBody');
+      tbody.innerHTML = '';
+      
+      let filteredData = rawData;
+      if (searchText) {
+        const search = searchText.toLowerCase();
+        filteredData = rawData.filter(row => {
+          return Object.values(row).some(val => 
+            String(val).toLowerCase().includes(search)
+          );
+        });
+      }
+      
+      // Sort data
+      filteredData.sort((a, b) => {
+        let valA = a[currentSortColumn];
+        let valB = b[currentSortColumn];
+        
+        if (currentSortColumn === 'desa') {
+          valA = String(valA).toLowerCase();
+          valB = String(valB).toLowerCase();
+        } else {
+          valA = Number(valA) || 0;
+          valB = Number(valB) || 0;
+        }
+        
+        if (currentSortOrder === 'asc') {
+          return valA > valB ? 1 : -1;
+        } else {
+          return valA < valB ? 1 : -1;
+        }
+      });
+      
+      filteredData.forEach(row => {
+        const tr = document.createElement('tr');
+        const hasWarning = (Number(row.jumlah_kk_id) > Number(row.jumlah_individu_id) && Number(row.jumlah_individu_id) > 0) ||
+                          (Number(row.jumlah_kk_sdgs) > Number(row.jumlah_individu_sdgs) && Number(row.jumlah_individu_sdgs) > 0);
+        
+        if (hasWarning) {
+          tr.className = 'bg-red-50 dark:bg-red-900/10';
+        } else {
+          tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-700/50';
+        }
+        
+        tr.innerHTML = `
+          <td class="px-3 py-2 whitespace-nowrap">${row.tahun}</td>
+          <td class="px-3 py-2 whitespace-nowrap font-medium">${row.desa}</td>
+          <td class="px-3 py-2 text-right whitespace-nowrap">${row.hasil_pendataan_sdgs_desa_target}</td>
+          <td class="px-3 py-2 text-right whitespace-nowrap">${row.hasil_pendataan_sdgs_desa_realisasi}</td>
+          <td class="px-3 py-2 text-right whitespace-nowrap">${row.jumlah_rt_id}</td>
+          <td class="px-3 py-2 text-right whitespace-nowrap">${row.jumlah_rt_sdgs}</td>
+          <td class="px-3 py-2 text-right whitespace-nowrap ${Number(row.jumlah_kk_id) > Number(row.jumlah_individu_id) && Number(row.jumlah_individu_id) > 0 ? 'text-red-600 dark:text-red-400 font-bold' : ''}">${row.jumlah_kk_id}</td>
+          <td class="px-3 py-2 text-right whitespace-nowrap ${Number(row.jumlah_kk_sdgs) > Number(row.jumlah_individu_sdgs) && Number(row.jumlah_individu_sdgs) > 0 ? 'text-red-600 dark:text-red-400 font-bold' : ''}">${row.jumlah_kk_sdgs}</td>
+          <td class="px-3 py-2 text-right whitespace-nowrap">${row.jumlah_individu_id}</td>
+          <td class="px-3 py-2 text-right whitespace-nowrap">${row.jumlah_individu_sdgs}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      
+      // Update sort arrows
+      document.querySelectorAll('[data-sort]').forEach(th => {
+        const arrow = th.querySelector('.sort-arrow');
+        if (th.dataset.sort === currentSortColumn) {
+          arrow.textContent = currentSortOrder === 'asc' ? '↑' : '↓';
+          arrow.className = 'sort-arrow ml-1 text-primary-600';
+        } else {
+          arrow.textContent = '';
+          arrow.className = 'sort-arrow ml-1';
+        }
+      });
+    }
+
+    function initRawDataTab() {
+      const searchInput = document.getElementById('searchRawData');
+      searchInput.oninput = (e) => renderRawDataTable(e.target.value);
+      
+      document.querySelectorAll('[data-sort]').forEach(th => {
+        th.onclick = () => {
+          const column = th.dataset.sort;
+          if (currentSortColumn === column) {
+            currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+          } else {
+            currentSortColumn = column;
+            currentSortOrder = 'asc';
+          }
+          renderRawDataTable(searchInput.value);
+        };
+      });
+      
+      renderRawDataTable();
+    }
+
+    function initCompare() {
+      const sel1 = document.getElementById('compareDesa1');
+      const sel2 = document.getElementById('compareDesa2');
+      
+      sel1.innerHTML = `<option value="">${t('select_desa1')}</option>`;
+      sel2.innerHTML = `<option value="">${t('select_desa2')}</option>`;
+      
+      DESA_LIST.forEach(desa => {
+        sel1.add(new Option(desa, desa));
+        sel2.add(new Option(desa, desa));
+      });
+      
+      const updateCompare = () => {
+        const d1 = sel1.value, d2 = sel2.value;
+        if (!d1 || !d2 || !processedData[d1] || !processedData[d2]) return;
+        
+        const ctx = document.getElementById('compareChart');
+        if (chartInstances.compare) chartInstances.compare.destroy();
+        
+        const s1 = processedData[d1].stats;
+        const s2 = processedData[d2].stats;
+        
+        chartInstances.compare = new Chart(ctx, {
+          type: 'radar',
+          data: {
+            labels: [t('desa'), t('rt'), t('kk'), t('individu'), t('total')],
+            datasets: [
+              {
+                label: d1,
+                data: [s1.desaPercent, s1.rtPercent, s1.kkPercent, s1.indivPercent, s1.totalPercent],
+                borderColor: 'rgb(14, 165, 233)',
+                backgroundColor: 'rgba(14, 165, 233, 0.2)'
+              },
+              {
+                label: d2,
+                data: [s2.desaPercent, s2.rtPercent, s2.kkPercent, s2.indivPercent, s2.totalPercent],
+                borderColor: 'rgb(168, 85, 247)',
+                backgroundColor: 'rgba(168, 85, 247, 0.2)'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { r: { beginAtZero: true, max: 100 } }
+          }
+        });
+      };
+      
+      sel1.onchange = updateCompare;
+      sel2.onchange = updateCompare;
+    }
+
+    function initYearFilter() {
+      const sel = document.getElementById('filterTahun');
+      sel.innerHTML = `<option value="">${t('all_years')}</option>`;
+      allYears.forEach(year => {
+        sel.add(new Option(year, year));
+      });
+      
+      sel.onchange = async () => {
+        currentYearFilter = sel.value;
+        processData();
+        renderSummary();
+        renderCards(document.getElementById('searchDesa').value);
+        renderKecamatanChart();
+        renderLeaderboard();
+        if (!document.getElementById('tab-ranking').classList.contains('hidden')) {
+          renderRankingChart();
+        }
+        if (!document.getElementById('tab-rawdata').classList.contains('hidden')) {
+          renderRawDataTable(document.getElementById('searchRawData').value);
+        }
+      };
+    }
+
+    function exportToExcel() {
+      const wsData = [[t('desa'), t('tahun'), t('rt') + ' ' + t('target'), t('rt') + ' ' + t('realisasi'), t('rt') + ' %', t('kk') + ' ' + t('target'), t('kk') + ' ' + t('realisasi'), t('kk') + ' %', t('individu') + ' ' + t('target'), t('individu') + ' ' + t('realisasi'), t('individu') + ' %', t('total') + ' %']];
+      
+      Object.entries(processedData).forEach(([desa, data]) => {
+        const s = data.stats;
+        wsData.push([
+          desa, data.latest.tahun,
+          s.rtId, s.rtSdgs, s.rtPercent.toFixed(1),
+          s.kkId, s.kkSdgs, s.kkPercent.toFixed(1),
+          s.indivId, s.indivSdgs, s.indivPercent.toFixed(1),
+          s.totalPercent.toFixed(1)
+        ]);
+      });
+      
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+      XLSX.utils.book_append_sheet(wb, ws, 'SDGs Barambai');
+      XLSX.writeFile(wb, `SDGs_Barambai_${new Date().toISOString().split('T')[0]}.xlsx`);
+      showToast('Data berhasil diekspor ke Excel');
+    }
+
+    function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      doc.setFontSize(16);
+      doc.text('Dashboard SDGs Desa - Kecamatan Barambai 2026', 14, 20);
+      doc.setFontSize(10);
+      doc.text(`${t('last_update')}: ${new Date().toLocaleString('id-ID')}`, 14, 27);
+      
+      const summary = calcKecamatanSummary();
+      doc.text(`${t('total_percent')}: ${summary.total.toFixed(1)}%`, 14, 35);
+      
+      let y = 45;
+      doc.setFontSize(9);
+      doc.text(t('desa'), 14, y);
+      doc.text(t('rt') + ' %', 60, y);
+      doc.text(t('kk') + ' %', 85, y);
+      doc.text(t('individu') + ' %', 110, y);
+      doc.text(t('total') + ' %', 140, y);
+      y += 7;
+      
+      Object.entries(processedData).forEach(([desa, data]) => {
+        if (y > 270) { doc.addPage(); y = 20; }
+        const s = data.stats;
+        doc.text(desa.substring(0, 25), 14, y);
+        doc.text(s.rtPercent.toFixed(1), 60, y);
+        doc.text(s.kkPercent.toFixed(1), 85, y);
+        doc.text(s.indivPercent.toFixed(1), 110, y);
+        doc.text(s.totalPercent.toFixed(1), 140, y);
+        y += 6;
+      });
+      
+      doc.save(`SDGs_Barambai_${new Date().toISOString().split('T')[0]}.pdf`);
+      showToast('Data berhasil diekspor ke PDF');
+    }
+
+    document.getElementById('darkToggle').onclick = () => {
+      darkMode = !darkMode;
+      localStorage.setItem('darkMode', darkMode);
+      document.documentElement.classList.toggle('dark');
+    };
+
+    document.getElementById('langToggle').onchange = (e) => {
+      currentLang = e.target.value;
+      localStorage.setItem('lang', currentLang);
+      updateLanguage();
+      // Re-render with new language
+      if (Object.keys(processedData).length > 0) {
+        renderCards(document.getElementById('searchDesa').value);
+        renderLeaderboard();
+        renderKecamatanChart();
+        if (!document.getElementById('tab-ranking').classList.contains('hidden')) {
+          renderRankingChart();
+        }
+        if (!document.getElementById('tab-rawdata').classList.contains('hidden')) {
+          renderRawDataTable(document.getElementById('searchRawData').value);
+        }
+      }
+    };
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('bg-primary-600', 'text-white');
+          b.classList.add('text-slate-600', 'dark:text-slate-300', 'hover:bg-slate-100', 'dark:hover:bg-slate-700');
+        });
+        btn.classList.add('bg-primary-600', 'text-white');
+        btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'hover:bg-slate-100', 'dark:hover:bg-slate-700');
+        
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        const tabId = 'tab-' + btn.dataset.tab;
+        document.getElementById(tabId).classList.remove('hidden');
+        
+        if (btn.dataset.tab === 'leaderboard') renderLeaderboard();
+        if (btn.dataset.tab === 'ranking') renderRankingChart();
+        if (btn.dataset.tab === 'rawdata') renderRawDataTable(document.getElementById('searchRawData').value);
+      };
+    });
+
+    document.getElementById('searchDesa').oninput = (e) => renderCards(e.target.value);
+    document.getElementById('closeModal').onclick = () => {
+      document.getElementById('desaModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    };
+    document.getElementById('modalOverlay').onclick = () => {
+      document.getElementById('desaModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    };
+    document.getElementById('retryBtn').onclick = () => init();
+    document.getElementById('debugBtn').onclick = () => {
+      const debugDiv = document.getElementById('debugInfo');
+      debugDiv.classList.toggle('hidden');
+      debugDiv.innerHTML = '<pre>' + JSON.stringify(currentFetchDebug, null, 2) + '</pre>';
+    };
+    document.getElementById('exportExcel').onclick = exportToExcel;
+    document.getElementById('exportPDF').onclick = exportToPDF;
+    document.getElementById('mobileExport').onclick = () => {
+      const choice = confirm('Export ke Excel? Cancel untuk PDF');
+      if (choice) exportToExcel(); else exportToPDF();
+    };
+
+    async function init() {
+      document.getElementById('loadingState').classList.remove('hidden');
+      document.getElementById('errorState').classList.add('hidden');
+      document.getElementById('mainContent').classList.add('hidden');
+      updateLoadingText(t('loading'));
+      
+      try {
+        await fetchData();
+        
+        if (Object.keys(processedData).length === 0) {
+          throw new Error('Data berhasil dimuat tapi tidak ada data desa yang valid');
+        }
+        
+        initYearFilter();
+        renderSummary();
+        renderCards();
+        renderKecamatanChart();
+        renderLeaderboard();
+        initCompare();
+        initRawDataTab();
+        
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('mainContent').classList.remove('hidden');
+        console.log('[Dashboard] Init complete');
+        
+        setInterval(async () => {
+          try {
+            console.log('[AutoRefresh] Refreshing data...');
+            await fetchData();
+            renderSummary();
+            renderCards(document.getElementById('searchDesa').value);
+            renderKecamatanChart();
+            renderLeaderboard();
+            if (!document.getElementById('tab-rawdata').classList.contains('hidden')) {
+              renderRawDataTable(document.getElementById('searchRawData').value);
+            }
+            showToast('Data diperbarui otomatis');
+          } catch (err) {
+            console.error('[AutoRefresh] Failed:', err);
+          }
+        }, REFRESH_INTERVAL);
+        
+      } catch (err) {
+        console.error('[Init] Error:', err);
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('errorState').classList.remove('hidden');
+        document.getElementById('errorMessage').textContent = t('error_msg') + ': ' + err.message;
+        document.getElementById('debugInfo').innerHTML = '<pre>' + JSON.stringify(currentFetchDebug, null, 2) + '</pre>';
+      }
+    }
+  })();
+  </script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
